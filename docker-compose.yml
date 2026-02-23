@@ -31,7 +31,7 @@ services:
       dockerfile: Dockerfile.frontend
     container_name: industrial-park-frontend
     ports:
-      - "3000:3000"
+      - "5701:3000"
     environment:
       - NEXT_PUBLIC_BACKEND_URL=http://backend:8001
     depends_on:

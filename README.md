@@ -5,6 +5,7 @@ AI-powered industrial park subdivision design system with genetic algorithm opti
 ## 🎯 Overview
 
 This system generates optimized industrial park layouts from CAD files (DXF/DWG), balancing multiple objectives:
+
 - Number of lots
 - Design quality
 - Road network efficiency
@@ -14,6 +15,7 @@ This system generates optimized industrial park layouts from CAD files (DXF/DWG)
 ## ✨ Features
 
 ### Core Functionality
+
 - 🎯 **AI-Powered Subdivision Design**: Genetic algorithm optimization for industrial park layouts
 - 📊 **Financial Analysis**: Comprehensive ROI calculation with cost/revenue modeling
 - 🗺️ **DXF/DWG Processing**: Parse CAD files and extract boundary/constraint data
@@ -21,6 +23,7 @@ This system generates optimized industrial park layouts from CAD files (DXF/DWG)
 - ⚡ **Real-time Visualization**: Interactive 2D/3D design preview
 
 ### Advanced Features
+
 - 💰 **Financial Optimization Module** (NEW):
   - Detailed cost breakdown (11 cost categories)
   - Revenue projection with premiums/discounts
@@ -46,6 +49,7 @@ This system generates optimized industrial park layouts from CAD files (DXF/DWG)
   - JSON import/export
 
 ### Compliance
+
 - ✅ **IEAT Thailand Standards**: Green space (15%), setbacks (50m), parking (10%), fire access (30m)
 - ✅ **TCVN 7144 Vietnam Standards**: Lot sizes (500m²), frontage (20m), roads (12m), utilities (3m)
 - 📈 **Real-time Compliance Checking**: Automated validation during design generation
@@ -53,6 +57,7 @@ This system generates optimized industrial park layouts from CAD files (DXF/DWG)
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - Node.js 18+
 - Python 3.12+
 - pnpm (for frontend)
@@ -61,23 +66,27 @@ This system generates optimized industrial park layouts from CAD files (DXF/DWG)
 ### Installation
 
 1. **Clone repository:**
+
 ```bash
 git clone https://github.com/yourusername/new-realestate.git
 cd new-realestate
 ```
 
-2. **Install frontend dependencies:**
+1. **Install frontend dependencies:**
+
 ```bash
 pnpm install
 ```
 
-3. **Install backend dependencies:**
+1. **Install backend dependencies:**
+
 ```bash
 cd backend
 pip install -r requirements.txt
 ```
 
-4. **Set up environment variables:**
+1. **Set up environment variables:**
+
 ```bash
 # Frontend (.env.local)
 NEXT_PUBLIC_API_URL=http://localhost:8000
@@ -90,6 +99,7 @@ DATABASE_URL=postgresql://user:password@localhost:5432/realestate
 ### Running the Application
 
 **Development Mode:**
+
 ```bash
 # Terminal 1: Frontend
 pnpm dev
@@ -100,14 +110,16 @@ uvicorn api.main:app --reload
 ```
 
 **Production Mode:**
+
 ```bash
 docker-compose up
 ```
 
 Access the application:
-- Frontend: http://localhost:3000
-- Backend API: http://localhost:8000
-- API Docs: http://localhost:8000/docs
+
+- Frontend: <http://localhost:5701>
+- Backend API: <http://localhost:8000>
+- API Docs: <http://localhost:8000/docs>
 
 ## 📖 Documentation
 
@@ -120,12 +132,14 @@ Access the application:
 ## 🧪 Testing
 
 Run comprehensive test suite:
+
 ```bash
 cd backend
 python -m pytest tests/test_new_optimizers.py -v
 ```
 
 Test coverage:
+
 - Financial Optimizer: 4 tests (cost, revenue, ROI, multi-objective)
 - Utility Router: 4 tests (water, sewer, electrical, cost estimation)
 - Terrain Analyzer: 5 tests (DEM, slope, buildable areas, cut/fill, grading)

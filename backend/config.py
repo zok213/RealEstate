@@ -38,7 +38,7 @@ class Settings(BaseSettings):
     # App
     app_env: str = "development"
     debug: bool = True
-    cors_origins: str = "http://localhost:3000"
+    cors_origins: str = "http://localhost:5701"
     
     class Config:
         env_file = ".env"
