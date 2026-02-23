@@ -1,0 +1,74 @@
+{
+  "name": "Food Processing",
+  "description": "Food manufacturing and processing facilities with strict hygiene requirements",
+  "typical_lot_size_m2": {
+    "min": 2000,
+    "max": 5000,
+    "preferred": 3500
+  },
+  "frontage_requirements": {
+    "min_m": 40,
+    "preferred_m": 60
+  },
+  "road_specifications": {
+    "row_m": 20,
+    "pavement_width_m": 16,
+    "heavy_duty": true,
+    "design_load_tons": 25
+  },
+  "drainage": {
+    "min_slope_pct": 2.0,
+    "storm_drain_capacity_multiplier": 1.5,
+    "grease_traps_required": true,
+    "frequent_cleaning": true
+  },
+  "utilities": {
+    "power": {
+      "demand_mva_per_rai": 6,
+      "three_phase": true,
+      "backup_required": true,
+      "refrigeration_loads": true
+    },
+    "water": {
+      "demand_cmd_per_rai": 5000,
+      "potable_grade": true,
+      "high_pressure_required": true
+    },
+    "wastewater": {
+      "generation_cmd_per_rai": 4000,
+      "pretreatment_required": true,
+      "pollutants": ["organic_matter", "fats_oils_grease", "food_waste"],
+      "bod_cod_limits": true
+    }
+  },
+  "special_requirements": {
+    "cold_storage_area": true,
+    "loading_docks": true,
+    "truck_turning_radius_m": 20,
+    "pest_control_buffer": true,
+    "wash_down_stations": true,
+    "separate_raw_cooked_zones": true
+  },
+  "building_specs": {
+    "typical_coverage_pct": 65,
+    "height_m": 10,
+    "washable_walls": true,
+    "climate_control": true,
+    "humidity_control": true,
+    "stainless_surfaces": true
+  },
+  "compliance": {
+    "gmp_certified": true,
+    "haccp_compliant": true,
+    "fda_thailand_approval": true,
+    "environmental_impact_assessment": "required",
+    "fire_safety_class": "medium",
+    "buffer_from_residential_m": 300
+  },
+  "worker_facilities": {
+    "changing_rooms": true,
+    "shower_facilities": true,
+    "canteen_required": true,
+    "workers_per_ha": 250
+  }
+}

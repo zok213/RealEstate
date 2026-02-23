@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Upload Site Boundary - Step 1</title>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="/static/css/main.css" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="/static/js/api.js"></script>
+<script src="/static/js/utils.js"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#36e27b",
+                        "background-light": "#f6f8f7",
+                        "background-dark": "#112117",
+                        "surface-dark": "#1b3224", // Custom dark surface derived from theme vibe
+                        "surface-border": "#254632", // Border color derived from theme
+                    },
+                    fontFamily: {
+                        "display": ["Spline Sans", "Noto Sans", "sans-serif"],
+                        "body": ["Spline Sans", "Noto Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white antialiased min-h-screen flex flex-col">
+<!-- Main Layout Container -->
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+<!-- Header -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-gray-200 dark:border-surface-border bg-white dark:bg-background-dark px-6 py-4 lg:px-10 z-10">
+<div class="flex items-center gap-4">
+<div class="flex items-center justify-center size-10 rounded-full bg-primary/10 text-primary">
+<span class="material-symbols-outlined text-2xl">upload_file</span>
+</div>
+<h2 class="text-xl font-bold leading-tight tracking-tight">Upload Site Boundary</h2>
+</div>
+<div class="flex gap-3">
+<button onclick="window.location.href='/'" class="flex items-center justify-center h-10 px-6 rounded-full border border-gray-200 dark:border-surface-border hover:bg-gray-100 dark:hover:bg-surface-border text-sm font-bold transition-colors cursor-pointer">
+                    Back
+                </button>
+<button onclick="window.location.href='/'" class="flex size-10 items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-surface-border transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-gray-500 dark:text-gray-400">close</span>
+</button>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 w-full flex justify-center p-4 md:p-8 lg:p-12">
+<div class="w-full max-w-4xl flex flex-col gap-8">
+<!-- STEP 1: File Upload (Active) -->
+<section class="flex flex-col gap-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
+<div class="flex items-center gap-3">
+<div class="flex items-center justify-center size-8 rounded-full bg-primary text-background-dark font-bold text-sm">1</div>
+<h2 class="text-2xl font-bold tracking-tight">File Upload</h2>
+</div>
+<div class="pl-11">
+<div id="drop-zone" class="group relative flex flex-col items-center gap-6 rounded-xl border-2 border-dashed border-primary/50 hover:border-primary bg-surface-dark/30 hover:bg-surface-dark/50 px-6 py-16 transition-all duration-300 cursor-pointer">
+<div class="size-16 rounded-full bg-primary/10 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform duration-300">
+<span class="material-symbols-outlined text-primary text-4xl">folder_open</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-center">
+<p class="text-lg font-bold leading-tight max-w-[480px]">
+                                    Drag &amp; drop DXF or GeoJSON file here
+                                </p>
+<p class="text-sm text-gray-400 font-normal">
+                                    or <span class="text-primary font-bold underline decoration-primary/50 hover:decoration-primary">Browse Files</span> from your computer
+                                </p>
+</div>
+<div class="flex items-center gap-4 text-xs font-medium text-gray-500 dark:text-gray-400 bg-background-light dark:bg-surface-border/50 px-4 py-2 rounded-full">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">sd_storage</span> Max: 50MB
+                                </span>
+<span class="w-px h-3 bg-gray-500/30"></span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">data_object</span> .dxf / .geojson
+                                </span>
+</div>
+<input id="file-input" type="file" accept=".dxf,.geojson,.json" class="hidden"/>
+</div>
+<div id="file-info" class="hidden mt-4 p-4 bg-surface-dark rounded-xl border border-surface-border">
+<p class="text-white font-medium">Selected file: <span id="file-name"></span></p>
+<p class="text-gray-400 text-sm">Size: <span id="file-size"></span></p>
+
+<!-- Base Location for DXF (metric coordinates) -->
+<div id="base-location" class="hidden mt-4 pt-4 border-t border-surface-border">
+<p class="text-white font-medium mb-3">📍 DXF Base Location (Optional)</p>
+<p class="text-gray-400 text-xs mb-3">For DXF files with metric coordinates, specify a reference point:</p>
+<div class="grid grid-cols-2 gap-3">
+<div>
+<label class="text-xs text-gray-400 block mb-1">Latitude</label>
+<input id="base-lat" type="number" step="0.000001" value="21.0285" class="w-full bg-surface-border border border-gray-600 rounded-lg h-9 px-3 text-white text-sm font-mono" placeholder="21.0285"/>
+</div>
+<div>
+<label class="text-xs text-gray-400 block mb-1">Longitude</label>
+<input id="base-lng" type="number" step="0.000001" value="105.8542" class="w-full bg-surface-border border border-gray-600 rounded-lg h-9 px-3 text-white text-sm font-mono" placeholder="105.8542"/>
+</div>
+</div>
+<p class="text-xs text-gray-500 mt-2">💡 Default: Hanoi, Vietnam (21.0285°N, 105.8542°E)</p>
+</div>
+</div>
+<div id="upload-progress" class="hidden mt-4">
+<div class="bg-surface-dark rounded-xl p-4 border border-surface-border">
+<div class="flex justify-between items-center mb-2">
+<span class="text-white font-medium">Uploading...</span>
+<span class="text-primary font-bold" id="progress-percent">0%</span>
+</div>
+<div class="w-full bg-gray-200 dark:bg-surface-border rounded-full h-2.5 overflow-hidden">
+<div class="bg-primary h-2.5 rounded-full transition-all duration-300" id="progress-bar" style="width: 0%"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- STEP 2: Estate Information -->
+<section id="step-2-estate-info" class="flex flex-col gap-4 hidden">
+<div class="flex items-center gap-3">
+<div class="flex items-center justify-center size-8 rounded-full border-2 border-primary text-primary font-bold text-sm">2</div>
+<h3 class="text-xl font-bold tracking-tight text-white">Estate Information</h3>
+</div>
+<div class="pl-11 grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Estate Name -->
+<div class="col-span-1 md:col-span-2">
+<label class="flex flex-col gap-2">
+<span class="text-sm font-medium text-white">Estate Name *</span>
+<input id="estate-name" class="w-full bg-background-light dark:bg-surface-dark border border-gray-200 dark:border-surface-border rounded-xl h-12 px-4 text-white placeholder-gray-500 focus:ring-2 focus:ring-primary focus:border-primary" placeholder="e.g. KCN Tiên Sơn" type="text" required/>
+</label>
+</div>
+<!-- Location -->
+<div class="col-span-1">
+<label class="flex flex-col gap-2">
+<span class="text-sm font-medium text-white">Location *</span>
+<div class="relative">
+<input id="estate-location" class="w-full bg-background-light dark:bg-surface-dark border border-gray-200 dark:border-surface-border rounded-xl h-12 pl-10 pr-4 text-white placeholder-gray-500 focus:ring-2 focus:ring-primary focus:border-primary" placeholder="e.g. Hoàn Sơn, Tiên Du" type="text" required/>
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-primary text-lg">location_on</span>
+</div>
+</label>
+</div>
+<!-- Province -->
+<div class="col-span-1">
+<label class="flex flex-col gap-2">
+<span class="text-sm font-medium text-white">Province *</span>
+<div class="relative">
+<select id="estate-province" class="w-full appearance-none bg-background-light dark:bg-surface-dark border border-gray-200 dark:border-surface-border rounded-xl h-12 px-4 text-white focus:ring-2 focus:ring-primary focus:border-primary" required>
+<option value="">Select Province...</option>
+<option value="Bắc Ninh">Bắc Ninh</option>
+<option value="Hà Nội">Hà Nội</option>
+<option value="TP.HCM">TP. Hồ Chí Minh</option>
+<option value="Đà Nẵng">Đà Nẵng</option>
+<option value="Hải Phòng">Hải Phòng</option>
+<option value="Other">Other Province</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">expand_more</span>
+</div>
+</label>
+</div>
+<!-- GeoJSON Upload for Precise Location -->
+<div class="col-span-1 md:col-span-2">
+<div class="bg-surface-dark rounded-xl p-4 border border-surface-border">
+<p class="text-white font-medium mb-2">🗺️ Upload GeoJSON for Precise Location (Optional)</p>
+<p class="text-gray-400 text-xs mb-3">Upload a GeoJSON file to specify the exact geographic location of this estate boundary. Otherwise, the system will use the base location from Step 1.</p>
+<input type="file" id="geojson-file" accept=".geojson,.json" class="hidden"/>
+<button type="button" onclick="document.getElementById('geojson-file').click()" class="w-full bg-surface-border hover:bg-[#2a4639] border border-gray-600 rounded-lg h-10 px-4 text-white text-sm font-medium transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-lg">upload_file</span>
+Upload GeoJSON (Optional)
+</button>
+<p id="geojson-status" class="text-xs text-primary mt-2 hidden"></p>
+</div>
+</div>
+<!-- Manual Center Coordinates -->
+<div class="col-span-1">
+<label class="flex flex-col gap-2">
+<span class="text-sm font-medium text-white">Center Latitude (Optional)</span>
+<input id="center-lat" class="w-full bg-background-light dark:bg-surface-dark border border-gray-200 dark:border-surface-border rounded-xl h-12 px-4 text-white placeholder-gray-500 font-mono text-sm focus:ring-2 focus:ring-primary" placeholder="e.g. 21.0285" type="number" step="0.000001"/>
+</label>
+</div>
+<div class="col-span-1">
+<label class="flex flex-col gap-2">
+<span class="text-sm font-medium text-white">Center Longitude (Optional)</span>
+<input id="center-lng" class="w-full bg-background-light dark:bg-surface-dark border border-gray-200 dark:border-surface-border rounded-xl h-12 px-4 text-white placeholder-gray-500 font-mono text-sm focus:ring-2 focus:ring-primary" placeholder="e.g. 105.8542" type="number" step="0.000001"/>
+</label>
+</div>
+<!-- Submit Button -->
+<div class="col-span-1 md:col-span-2 pt-4">
+<button id="submit-estate-info" type="button" class="w-full bg-primary text-background-dark font-bold rounded-xl h-12 px-6 hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">check_circle</span>
+Continue to Parsing
+</button>
+</div>
+</div>
+</section>
+<!-- STEP 3: Parsing (Disabled) -->
+<section class="flex flex-col gap-4 opacity-40 select-none pointer-events-none grayscale pb-20">
+<div class="flex items-center gap-3">
+<div class="flex items-center justify-center size-8 rounded-full border border-gray-500 text-gray-500 font-bold text-sm">3</div>
+<h3 class="text-xl font-bold tracking-tight text-gray-400">Parsing</h3>
+</div>
+<div class="pl-11">
+<div class="bg-background-light dark:bg-surface-dark rounded-xl p-6 border border-gray-200 dark:border-surface-border">
+<div class="flex justify-between items-center mb-2">
+<span class="text-sm font-medium text-gray-400">Status: Waiting for file upload...</span>
+<span class="text-sm font-bold text-gray-500">0%</span>
+</div>
+<div class="w-full bg-gray-200 dark:bg-surface-border rounded-full h-2.5 overflow-hidden">
+<div class="bg-primary h-2.5 rounded-full" style="width: 0%"></div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Footer Actions -->
+<footer class="fixed bottom-0 left-0 w-full border-t border-gray-200 dark:border-surface-border bg-white dark:bg-background-dark/95 backdrop-blur-sm p-4 z-20">
+<div class="max-w-4xl mx-auto flex justify-end gap-4">
+<button class="h-12 px-8 rounded-full border border-gray-200 dark:border-surface-border bg-transparent hover:bg-gray-100 dark:hover:bg-surface-border text-base font-bold transition-colors">
+                    Cancel
+                </button>
+<button id="next-btn" class="h-12 px-8 rounded-full bg-gray-300 dark:bg-surface-border text-gray-500 dark:text-gray-400 text-base font-bold cursor-not-allowed opacity-70" disabled="">
+                    Next
+                </button>
+</div>
+</footer>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('file-input');
+    const fileInfo = document.getElementById('file-info');
+    const fileName = document.getElementById('file-name');
+    const fileSize = document.getElementById('file-size');
+    const uploadProgress = document.getElementById('upload-progress');
+    const progressBar = document.getElementById('progress-bar');
+    const progressPercent = document.getElementById('progress-percent');
+    const nextBtn = document.getElementById('next-btn');
+    
+    let selectedFile = null;
+
+    // Drag and drop events
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('border-primary', 'bg-surface-dark/50');
+    });
+
+    dropZone.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('border-primary', 'bg-surface-dark/50');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('border-primary', 'bg-surface-dark/50');
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            handleFileSelect(files[0]);
+        }
+    });
+
+    dropZone.addEventListener('click', () => {
+        fileInput.click();
+    });
+
+    fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) {
+            handleFileSelect(e.target.files[0]);
+        }
+    });
+
+    function handleFileSelect(file) {
+        // Validate file
+        const fileName = file.name.toLowerCase();
+        if (!fileName.endsWith('.dxf') && !fileName.endsWith('.geojson') && !fileName.endsWith('.json')) {
+            alert('Please select a .dxf or .geojson file');
+            return;
+        }
+        
+        if (file.size > 50 * 1024 * 1024) { // 50MB
+            alert('File size must be less than 50MB');
+            return;
+        }
+
+        selectedFile = file;
+        
+        // Show file info
+        fileName.textContent = file.name;
+        fileSize.textContent = formatFileSize(file.size);
+        fileInfo.classList.remove('hidden');
+        
+        // Show base location input for DXF files
+        const baseLocation = document.getElementById('base-location');
+        if (file.name.toLowerCase().endsWith('.dxf')) {
+            baseLocation.classList.remove('hidden');
+        } else {
+            baseLocation.classList.add('hidden');
+        }
+        
+        // Enable next button
+        nextBtn.disabled = false;
+        nextBtn.classList.remove('bg-gray-300', 'dark:bg-surface-border', 'text-gray-500', 'dark:text-gray-400', 'cursor-not-allowed', 'opacity-70');
+        nextBtn.classList.add('bg-primary', 'text-background-dark', 'hover:bg-primary/90');
+        
+        // Upload DXF file immediately (get boundary shape)
+        uploadFile(file);
+    }
+    
+    // Store uploaded session for later use
+    let uploadedSessionId = null;
+    let uploadedGeoJSON = null;
+
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    function uploadFile(file) {
+        uploadProgress.classList.remove('hidden');
+        
+        const formData = new FormData();
+        formData.append('file', file);
+
+        const xhr = new XMLHttpRequest();
+        
+        xhr.upload.addEventListener('progress', (e) => {
+            if (e.lengthComputable) {
+                const percentComplete = (e.loaded / e.total) * 100;
+                progressBar.style.width = percentComplete + '%';
+                progressPercent.textContent = Math.round(percentComplete) + '%';
+            }
+        });
+
+        xhr.addEventListener('load', () => {
+            uploadProgress.classList.add('hidden');
+            if (xhr.status === 200) {
+                const response = JSON.parse(xhr.responseText);
+                if (response.success) {
+                    uploadedSessionId = response.session_id;
+                    // Show Step 2 - Estate Info form
+                    document.getElementById('step-2-estate-info').classList.remove('hidden');
+                    document.getElementById('step-2-estate-info').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                } else {
+                    alert('Upload failed: ' + (response.detail || 'Unknown error'));
+                }
+            } else {
+                alert('Upload failed with status: ' + xhr.status);
+            }
+        });
+
+        xhr.addEventListener('error', () => {
+            alert('Upload failed');
+            uploadProgress.classList.add('hidden');
+        });
+
+        const API_BASE_URL = window.location.origin;
+        xhr.open('POST', `${API_BASE_URL}/api/upload-dxf`);
+        xhr.send(formData);
+    }
+    
+    // Handle GeoJSON file selection
+    document.getElementById('geojson-file')?.addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        console.log('[GEOJSON] File selected:', file.name, file.type, file.size);
+        
+        try {
+            const text = await file.text();
+            console.log('[GEOJSON] File content length:', text.length);
+            console.log('[GEOJSON] First 200 chars:', text.substring(0, 200));
+            
+            uploadedGeoJSON = JSON.parse(text);
+            console.log('[GEOJSON] Parsed successfully:', uploadedGeoJSON);
+            
+            document.getElementById('geojson-status').textContent = `✓ ${file.name} uploaded`;
+            document.getElementById('geojson-status').classList.remove('hidden');
+        } catch (err) {
+            console.error('[GEOJSON] Parse error:', err);
+            alert('Invalid GeoJSON file: ' + err.message);
+        }
+    });
+    
+    // Submit estate information
+    document.getElementById('submit-estate-info')?.addEventListener('click', async () => {
+        const estateName = document.getElementById('estate-name').value.trim();
+        const estateLocation = document.getElementById('estate-location').value.trim();
+        const estateProvince = document.getElementById('estate-province').value;
+        
+        if (!estateName || !estateLocation || !estateProvince) {
+            alert('Please fill in all required fields (Estate Name, Location, Province)');
+            return;
+        }
+        
+        if (!uploadedSessionId) {
+            alert('No session found. Please upload a DXF file first.');
+            return;
+        }
+        
+        // Collect all metadata
+        const metadata = {
+            estate_name: estateName,
+            location: estateLocation,
+            province: estateProvince,
+            country: 'Vietnam'
+        };
+        
+        // Add base location from Step 1 if available
+        const baseLat = document.getElementById('base-lat')?.value;
+        const baseLng = document.getElementById('base-lng')?.value;
+        if (baseLat && baseLng) {
+            metadata.base_location = {
+                lat: parseFloat(baseLat),
+                lng: parseFloat(baseLng)
+            };
+        }
+        
+        // Add manual center coordinates if provided
+        const centerLat = document.getElementById('center-lat')?.value;
+        const centerLng = document.getElementById('center-lng')?.value;
+        if (centerLat && centerLng) {
+            metadata.center = {
+                lat: parseFloat(centerLat),
+                lng: parseFloat(centerLng)
+            };
+        }
+        
+        // Add GeoJSON if uploaded
+        if (uploadedGeoJSON) {
+            console.log('[SUBMIT] Including GeoJSON in metadata:', uploadedGeoJSON);
+            metadata.geojson = uploadedGeoJSON;
+        } else {
+            console.log('[SUBMIT] No GeoJSON uploaded');
+        }
+        
+        console.log('[SUBMIT] Sending metadata to server:', metadata);
+        
+        // Update session with metadata
+        try {
+            const response = await fetch(`/api/session/${uploadedSessionId}/metadata`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(metadata)
+            });
+            
+            if (response.ok) {
+                // Redirect to estate detail page
+                window.location.href = `/estate/${uploadedSessionId}`;
+            } else {
+                const error = await response.json();
+                alert('Failed to save estate info: ' + (error.detail || 'Unknown error'));
+            }
+        } catch (err) {
+            alert('Error: ' + err.message);
+        }
+    });
+});
+</script>
+</body></html>

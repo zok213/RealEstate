@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>EstateParser - Map View</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="/static/css/main.css" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="/static/js/api.js"></script>
+<script src="/static/js/utils.js"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#36e27b",
+                        "background-light": "#f6f8f7",
+                        "background-dark": "#112117",
+                        "dark-surface": "#1a2c22", // A slightly lighter dark for cards
+                        "dark-border": "#254632",
+                    },
+                    fontFamily: {
+                        "display": ["Spline Sans", "sans-serif"],
+                        "body": ["Noto Sans", "sans-serif"],
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for panels */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #112117; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #254632; 
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #366348; 
+        }
+        
+        .glass-panel {
+            background: rgba(26, 44, 34, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display antialiased overflow-hidden h-screen flex flex-col text-white selection:bg-primary selection:text-background-dark">
+<!-- Top Navigation -->
+<header class="flex-none flex items-center justify-between whitespace-nowrap border-b border-solid border-dark-border px-6 py-3 bg-background-dark z-20 relative">
+<div class="flex items-center gap-4">
+<div class="size-8 text-primary">
+<svg class="w-full h-full" fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M12.0799 24L4 19.2479L9.95537 8.75216L18.04 13.4961L18.0446 4H29.9554L29.96 13.4961L38.0446 8.75216L44 19.2479L35.92 24L44 28.7521L38.0446 39.2479L29.96 34.5039L29.9554 44H18.0446L18.04 34.5039L9.95537 39.2479L4 28.7521L12.0799 24Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+<h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em]">EstateParser</h2>
+</div>
+<div class="flex items-center gap-6">
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-white/80 hover:text-white text-sm font-medium transition-colors" href="#">Projects</a>
+<a class="text-white/80 hover:text-white text-sm font-medium transition-colors" href="#">Settings</a>
+<a class="text-white/80 hover:text-white text-sm font-medium transition-colors" href="#">Support</a>
+</nav>
+<div class="h-6 w-px bg-dark-border mx-2"></div>
+<button class="relative flex items-center justify-center rounded-full size-10 hover:bg-dark-surface transition-colors text-white">
+<span class="material-symbols-outlined text-[20px]">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-primary rounded-full border-2 border-background-dark"></span>
+</button>
+<div class="bg-center bg-no-repeat bg-cover rounded-full size-10 border-2 border-dark-border cursor-pointer" data-alt="User profile picture placeholder" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBQF9jPFlEOhgJ2w02irbR9CfaaJ2pWZKLWivfC3Qb6Jvh38AKl9JqmrhDAOTslYO6kYadICjxGWZmg9kTengq3wwB3jZgSlqX6SZP3cNPuTN6O5HB3w-u4wQNqrFZ5OfdqfhO3VUBZziHBRMKL6CAc361vzB8wzSV1V60H_sF_x56UlPqBC1pjVL1nWLmvWxNbs6F-onG6HZ0UeH_evVOuOdxQEB5yKNxoyqbWQyhSYA1s7qHSoIGh5liSCNd_zuOCHxAx5Kgq1WAR");'></div>
+</div>
+</header>
+<!-- Context Header (Breadcrumbs + Tabs) -->
+<div class="flex-none bg-background-dark border-b border-dark-border z-10 relative shadow-md">
+<div class="px-6 pt-4 pb-0 flex flex-col gap-4">
+<!-- Breadcrumbs -->
+<div class="flex flex-wrap items-center gap-2 text-sm">
+<a class="text-white/60 hover:text-primary transition-colors" href="/">Home</a>
+<span class="text-white/40">/</span>
+<a class="text-white/60 hover:text-primary transition-colors" href="/">Estates</a>
+<span class="text-white/40">/</span>
+<span class="text-white font-medium">Sunnyvale Estate</span>
+</div>
+<!-- Tabs -->
+<div class="flex gap-8">
+<a class="group flex flex-col items-center justify-center border-b-[3px] border-b-transparent hover:border-b-white/20 pb-3" href="javascript:history.back()">
+<p class="text-white/60 group-hover:text-white text-sm font-bold tracking-[0.015em] transition-colors">Overview</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-[3px] border-b-primary pb-3" href="javascript:void(0)">
+<p class="text-white text-sm font-bold tracking-[0.015em]">Map</p>
+</a>
+<a class="group flex flex-col items-center justify-center border-b-[3px] border-b-transparent hover:border-b-white/20 pb-3" href="javascript:history.back()">
+<p class="text-white/60 group-hover:text-white text-sm font-bold tracking-[0.015em] transition-colors">Plots</p>
+</a>
+<a class="group flex flex-col items-center justify-center border-b-[3px] border-b-transparent hover:border-b-white/20 pb-3" href="/">
+<p class="text-white/60 group-hover:text-white text-sm font-bold tracking-[0.015em] transition-colors">Documents</p>
+</a>
+</div>
+</div>
+</div>
+<!-- Main Map Area -->
+<main class="flex-1 relative w-full h-full overflow-hidden bg-[#111]">
+<!-- Map Background & Simulation -->
+<div class="absolute inset-0 z-0 bg-cover bg-center grayscale contrast-125 brightness-50" data-alt="Satellite map view of a city landscape" data-location="Sunnyvale Estate" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC6p5GWq3lYQSZ7JxYI_9Y9wuOlKXkQywBVeJ4g9LoKfVO9-egBpeghxwaqAWpkA4fVwME7nLsV4nsyv1TY4fQux5I_hF2MWQzy3DU-Lfkz2JCsBesJnzAz5Sx5XfRbk01ku6j5mXc29jZixSouUcEJLegAqwbjwiWR_-YMxV1MIq1sl1CIgNQCTh_qwQhrPBbrZHq_2Ol17SRfN57ziM_uS-zRu5BHaJjbMwCXjl-lPB68clqUdXsym6FXer30FkDKzWFGL0uQvWC5");'>
+</div>
+<!-- SVG Map Overlay (Simulating Parsed DXF Data) -->
+<svg class="absolute inset-0 w-full h-full z-0 pointer-events-none opacity-90" preserveaspectratio="xMidYMid slice" viewbox="0 0 1000 600">
+<defs>
+<pattern height="40" id="grid" patternunits="userSpaceOnUse" width="40">
+<path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"></path>
+</pattern>
+</defs>
+<rect fill="url(#grid)" height="100%" width="100%"></rect>
+<!-- Roads (Gray Lines) -->
+<path d="M 100 300 L 900 300 M 500 100 L 500 500 M 200 300 Q 250 450 400 500" fill="none" stroke="#555" stroke-width="8"></path>
+<!-- Utilities (Blue/Red Lines) -->
+<path d="M 110 310 L 890 310" fill="none" opacity="0.6" stroke="#3b82f6" stroke-dasharray="5,5" stroke-width="2"></path>
+<path d="M 510 110 L 510 490" fill="none" opacity="0.6" stroke="#ef4444" stroke-dasharray="5,5" stroke-width="2"></path>
+<!-- Plots -->
+<!-- Available (Green) -->
+<path class="pointer-events-auto cursor-pointer hover:opacity-80 transition-opacity" d="M 150 150 L 250 150 L 250 250 L 150 250 Z" fill="rgba(54, 226, 123, 0.2)" stroke="#36e27b" stroke-width="2"></path>
+<path class="pointer-events-auto cursor-pointer hover:opacity-80 transition-opacity" d="M 150 260 L 250 260 L 250 360 L 150 360 Z" fill="rgba(54, 226, 123, 0.2)" stroke="#36e27b" stroke-width="2"></path>
+<path class="pointer-events-auto cursor-pointer hover:opacity-80 transition-opacity" d="M 260 150 L 360 150 L 360 250 L 260 250 Z" fill="rgba(54, 226, 123, 0.2)" stroke="#36e27b" stroke-width="2"></path>
+<path class="pointer-events-auto cursor-pointer hover:opacity-80 transition-opacity" d="M 260 260 L 360 260 L 360 360 L 260 360 Z" fill="rgba(54, 226, 123, 0.2)" stroke="#36e27b" stroke-width="2"></path>
+<!-- Selected (Brighter Green fill) -->
+<path class="pointer-events-auto cursor-pointer" d="M 370 150 L 470 150 L 470 250 L 370 250 Z" fill="rgba(54, 226, 123, 0.5)" filter="drop-shadow(0 0 8px rgba(54, 226, 123, 0.5))" stroke="#36e27b" stroke-width="3"></path>
+<!-- Reserved (Orange) -->
+<path class="pointer-events-auto cursor-pointer hover:opacity-80 transition-opacity" d="M 150 370 L 250 370 L 250 470 L 150 470 Z" fill="rgba(249, 115, 22, 0.2)" stroke="#f97316" stroke-width="2"></path>
+<path class="pointer-events-auto cursor-pointer hover:opacity-80 transition-opacity" d="M 260 370 L 360 370 L 360 470 L 260 470 Z" fill="rgba(249, 115, 22, 0.2)" stroke="#f97316" stroke-width="2"></path>
+<!-- Sold (Gray) -->
+<path class="pointer-events-auto cursor-pointer hover:opacity-80 transition-opacity" d="M 550 370 L 650 370 L 650 470 L 550 470 Z" fill="rgba(100, 116, 139, 0.3)" stroke="#64748b" stroke-width="2"></path>
+<path class="pointer-events-auto cursor-pointer hover:opacity-80 transition-opacity" d="M 660 370 L 760 370 L 760 470 L 660 470 Z" fill="rgba(100, 116, 139, 0.3)" stroke="#64748b" stroke-width="2"></path>
+</svg>
+<!-- UI Overlays -->
+<div class="absolute inset-0 p-6 pointer-events-none flex flex-col justify-between">
+<!-- Top Row: Search & Legend -->
+<div class="flex justify-between items-start pointer-events-auto">
+<!-- Search Bar -->
+<div class="glass-panel rounded-full p-1 pl-4 flex items-center shadow-lg border border-white/10 w-full max-w-sm">
+<span class="material-symbols-outlined text-white/50">search</span>
+<input class="bg-transparent border-none text-white placeholder-white/50 focus:ring-0 w-full text-sm h-10" placeholder="Search plot ID, street..." type="text"/>
+<button class="bg-primary hover:bg-primary/90 text-background-dark rounded-full p-2 size-9 flex items-center justify-center transition-colors">
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+</div>
+<!-- Legend & Layers -->
+<div class="flex flex-col gap-3 items-end">
+<!-- Layer Toggle Button -->
+<button class="glass-panel size-11 rounded-full flex items-center justify-center text-white shadow-lg border border-white/10 hover:bg-dark-surface transition-colors" title="Toggle Layers">
+<span class="material-symbols-outlined">layers</span>
+</button>
+<!-- Expanded Legend Panel -->
+<div class="glass-panel rounded-xl p-4 w-64 shadow-xl border border-white/10 backdrop-blur-md">
+<div class="flex items-center justify-between mb-3">
+<h3 class="text-sm font-bold text-white">Map Legend</h3>
+<span class="material-symbols-outlined text-white/40 text-sm cursor-pointer hover:text-white">expand_less</span>
+</div>
+<div class="space-y-3">
+<div class="flex items-center justify-between group cursor-pointer">
+<div class="flex items-center gap-2">
+<div class="size-3 rounded-full bg-primary shadow-[0_0_8px_rgba(54,226,123,0.4)]"></div>
+<span class="text-xs text-white/80 group-hover:text-white">Available</span>
+</div>
+<span class="text-xs font-mono text-white/40">142</span>
+</div>
+<div class="flex items-center justify-between group cursor-pointer">
+<div class="flex items-center gap-2">
+<div class="size-3 rounded-full bg-orange-500"></div>
+<span class="text-xs text-white/80 group-hover:text-white">Reserved</span>
+</div>
+<span class="text-xs font-mono text-white/40">24</span>
+</div>
+<div class="flex items-center justify-between group cursor-pointer">
+<div class="flex items-center gap-2">
+<div class="size-3 rounded-full bg-slate-500"></div>
+<span class="text-xs text-white/80 group-hover:text-white">Sold</span>
+</div>
+<span class="text-xs font-mono text-white/40">89</span>
+</div>
+<hr class="border-white/10 my-2"/>
+<div class="flex items-center gap-2">
+<div class="w-4 h-0.5 bg-blue-500 border-b border-dashed border-blue-500"></div>
+<span class="text-xs text-white/80">Water Main</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-4 h-0.5 bg-red-500 border-b border-dashed border-red-500"></div>
+<span class="text-xs text-white/80">Power Grid</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Row: Controls & Info -->
+<div class="flex justify-between items-end pointer-events-auto h-full">
+<!-- Bottom Left: Status -->
+<div class="glass-panel rounded-full px-4 py-2 flex items-center gap-2 border border-white/10 shadow-lg mb-2">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+</span>
+<span class="text-xs font-medium text-white/80">Live Sync</span>
+<span class="text-xs text-white/40 border-l border-white/20 pl-2 ml-1">Updated 2m ago</span>
+</div>
+<!-- Center Popup (Simulated) -->
+<!-- Positioned absolutely relative to the map container to simulate being attached to a plot -->
+<div class="absolute top-1/3 left-[45%] transform -translate-x-1/2 translate-y-4">
+<div class="bg-[#1a2c22] border border-[#36e27b] rounded-xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.8)] w-72 overflow-hidden animate-in fade-in zoom-in duration-200">
+<div class="bg-[#254632]/50 p-3 border-b border-[#366348] flex justify-between items-start">
+<div>
+<h4 class="text-white font-bold text-base">Plot A-104</h4>
+<span class="text-xs text-primary bg-primary/10 px-2 py-0.5 rounded-full font-medium inline-block mt-1">Available</span>
+</div>
+<button class="text-white/40 hover:text-white transition-colors">
+<span class="material-symbols-outlined text-lg">close</span>
+</button>
+</div>
+<div class="p-4 space-y-3">
+<div class="grid grid-cols-2 gap-2 text-sm">
+<div>
+<p class="text-white/40 text-xs uppercase tracking-wider">Area</p>
+<p class="text-white font-medium">540 m²</p>
+</div>
+<div>
+<p class="text-white/40 text-xs uppercase tracking-wider">Type</p>
+<p class="text-white font-medium">Residential</p>
+</div>
+<div>
+<p class="text-white/40 text-xs uppercase tracking-wider">Price</p>
+<p class="text-white font-medium">$125,000</p>
+</div>
+<div>
+<p class="text-white/40 text-xs uppercase tracking-wider">Zoning</p>
+<p class="text-white font-medium">R-2</p>
+</div>
+</div>
+<div class="pt-2">
+<button class="w-full bg-primary hover:bg-primary/90 text-background-dark font-bold py-2 rounded-lg text-sm transition-colors flex items-center justify-center gap-2">
+<span>View Details</span>
+<span class="material-symbols-outlined text-base">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Triangle pointer simulation -->
+<div class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-[#1a2c22] border-r border-b border-[#36e27b] transform rotate-45"></div>
+</div>
+</div>
+<!-- Bottom Right: Zoom Controls -->
+<div class="flex flex-col gap-2 mb-2">
+<button class="glass-panel size-10 rounded-full flex items-center justify-center text-white shadow-lg border border-white/10 hover:bg-dark-surface transition-colors">
+<span class="material-symbols-outlined">my_location</span>
+</button>
+<div class="flex flex-col gap-px rounded-full overflow-hidden shadow-lg border border-white/10">
+<button class="glass-panel w-10 h-10 flex items-center justify-center text-white hover:bg-dark-surface transition-colors">
+<span class="material-symbols-outlined">add</span>
+</button>
+<div class="h-px w-full bg-white/10"></div>
+<button class="glass-panel w-10 h-10 flex items-center justify-center text-white hover:bg-dark-surface transition-colors">
+<span class="material-symbols-outlined">remove</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

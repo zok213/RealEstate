@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Estate Detail - Plots List</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&amp;family=Noto+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="/static/js/api.js"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#36e27b",
+                        "background-light": "#f6f8f7",
+                        "background-dark": "#112117",
+                        "surface-dark": "#1b3224",
+                        "border-green": "#366348",
+                        "text-muted": "#95c6a9",
+                    },
+                    fontFamily: {
+                        "display": ["Spline Sans", "sans-serif"],
+                        "body": ["Noto Sans", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for better aesthetics in dark mode */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #112117; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #366348; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #36e27b; 
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-black dark:text-white font-display">
+<div class="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden">
+<!-- Top Navigation Bar -->
+<div class="layout-container flex h-full grow flex-col">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-border-green bg-[#122118] px-10 py-3">
+<div class="flex items-center gap-4 text-white">
+<div class="size-8 text-primary flex items-center justify-center">
+<span class="material-symbols-outlined !text-3xl">polyline</span>
+</div>
+<h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em]">DXF Parser</h2>
+</div>
+<div class="flex flex-1 justify-end gap-8">
+<div class="hidden md:flex items-center gap-9">
+<a class="text-white hover:text-primary transition-colors text-sm font-medium leading-normal" href="/">Dashboard</a>
+<a class="text-primary text-sm font-medium leading-normal" href="/">Estates</a>
+<a class="text-white hover:text-primary transition-colors text-sm font-medium leading-normal" href="/upload">Upload</a>
+<a class="text-white hover:text-primary transition-colors text-sm font-medium leading-normal" href="/">Settings</a>
+</div>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border border-border-green" data-alt="User profile avatar showing a blurred abstract face" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBWaG5tVksi3wjDsUmRjijBaU4N2XQTB_RAWBivbz-d9IzQgu474ArSHNPxeXMXV433C3qW5wQSUek-37KxXlbHXxX4gZ-ycCCrVUJkGIuY66zlX6x09Cre4bqmI3spIevsReTuDR4CAMD2Clbo2QPSKeRYBgz0lgOr-G7N9I_wel3QzRpaN6WVizgD8mzo59cul9vB4AJ5feIfSfmK-2BbL226Wg0k0tvlZtSur_ljZKfs7g72Den2XIMDMV7BQf-aKP1Fml2ElyAU");'></div>
+</div>
+</header>
+<div class="px-4 md:px-10 lg:px-40 flex flex-1 justify-center py-5">
+<div class="layout-content-container flex flex-col max-w-[1200px] flex-1">
+<!-- Breadcrumbs -->
+<div class="flex flex-wrap gap-2 px-4 py-2">
+<a class="text-text-muted hover:text-primary transition-colors text-sm font-medium leading-normal" href="/">Home</a>
+<span class="text-text-muted text-sm font-medium leading-normal">/</span>
+<a class="text-text-muted hover:text-primary transition-colors text-sm font-medium leading-normal" href="/">Estates</a>
+<span class="text-text-muted text-sm font-medium leading-normal">/</span>
+<span class="text-white text-sm font-medium leading-normal">Sunset Valley Estate</span>
+</div>
+<!-- Page Heading -->
+<div class="flex flex-wrap justify-between items-end gap-3 px-4 py-4 mb-2">
+<div class="flex min-w-72 flex-col gap-2">
+<h1 class="text-white text-4xl font-black leading-tight tracking-[-0.033em]">Sunset Valley Estate</h1>
+<p class="text-text-muted text-base font-normal leading-normal">Estate ID: #12345 • Last synced: Today, 10:23 AM</p>
+</div>
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-12 px-6 bg-primary hover:bg-[#2dc46b] transition-colors text-[#112117] text-base font-bold leading-normal tracking-[0.015em] shadow-[0_0_20px_rgba(54,226,123,0.3)]">
+<span class="material-symbols-outlined mr-2 text-xl">add</span>
+<span class="truncate">Add Plot</span>
+</button>
+</div>
+<!-- Tabs -->
+<div class="pb-6">
+<div class="flex border-b border-border-green px-4 gap-8">
+<a class="group flex flex-col items-center justify-center border-b-[3px] border-b-transparent hover:border-b-border-green pb-[13px] pt-4 transition-all" href="#">
+<p class="text-text-muted group-hover:text-white text-sm font-bold leading-normal tracking-[0.015em]">Overview</p>
+</a>
+<a class="group flex flex-col items-center justify-center border-b-[3px] border-b-transparent hover:border-b-border-green pb-[13px] pt-4 transition-all" href="#">
+<p class="text-text-muted group-hover:text-white text-sm font-bold leading-normal tracking-[0.015em]">Map</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-[3px] border-b-primary text-white pb-[13px] pt-4" href="#">
+<p class="text-white text-sm font-bold leading-normal tracking-[0.015em]">Plots</p>
+</a>
+<a class="group flex flex-col items-center justify-center border-b-[3px] border-b-transparent hover:border-b-border-green pb-[13px] pt-4 transition-all" href="#">
+<p class="text-text-muted group-hover:text-white text-sm font-bold leading-normal tracking-[0.015em]">Documents</p>
+</a>
+</div>
+</div>
+<!-- Filters Section -->
+<div class="flex flex-col md:flex-row gap-4 px-4 py-4 mb-4 items-end">
+<label class="flex flex-col flex-1 w-full relative">
+<p class="text-white text-sm font-medium leading-normal pb-2">Search</p>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-text-muted">search</span>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-white focus:outline-0 focus:ring-0 border border-border-green bg-surface-dark focus:border-primary h-12 pl-12 pr-4 placeholder:text-text-muted/50 text-base font-normal leading-normal transition-all" placeholder="Search by Plot Code, Owner..." value=""/>
+</div>
+</label>
+<div class="flex gap-4 w-full md:w-auto">
+<label class="flex flex-col w-full md:w-48">
+<p class="text-white text-sm font-medium leading-normal pb-2">Province</p>
+<div class="relative">
+<select class="form-select w-full rounded-xl text-white focus:outline-0 focus:ring-0 border border-border-green bg-surface-dark focus:border-primary h-12 px-4 text-base font-normal leading-normal appearance-none cursor-pointer transition-all">
+<option value="">All Provinces</option>
+<option value="west">Western Cape</option>
+<option value="gauteng">Gauteng</option>
+<option value="kzn">KwaZulu-Natal</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none">expand_more</span>
+</div>
+</label>
+<label class="flex flex-col w-full md:w-48">
+<p class="text-white text-sm font-medium leading-normal pb-2">Status</p>
+<div class="relative">
+<select class="form-select w-full rounded-xl text-white focus:outline-0 focus:ring-0 border border-border-green bg-surface-dark focus:border-primary h-12 px-4 text-base font-normal leading-normal appearance-none cursor-pointer transition-all">
+<option value="">All Statuses</option>
+<option value="available">Available</option>
+<option value="sold">Sold</option>
+<option value="reserved">Reserved</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none">expand_more</span>
+</div>
+</label>
+</div>
+</div>
+<!-- Plots Table -->
+<div class="px-4">
+<div class="w-full overflow-hidden rounded-xl border border-border-green bg-surface-dark/50">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-border-green bg-surface-dark">
+<th class="p-4 text-sm font-bold text-text-muted tracking-wide">Plot Code</th>
+<th class="p-4 text-sm font-bold text-text-muted tracking-wide">Area (m²)</th>
+<th class="p-4 text-sm font-bold text-text-muted tracking-wide">Status</th>
+<th class="p-4 text-sm font-bold text-text-muted tracking-wide">Owner</th>
+<th class="p-4 text-sm font-bold text-text-muted tracking-wide">Tenant</th>
+<th class="p-4 text-sm font-bold text-text-muted tracking-wide text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border-green/50">
+<!-- Row 1 -->
+<tr class="group hover:bg-surface-dark/80 transition-colors">
+<td class="p-4">
+<a class="text-white font-medium hover:text-primary hover:underline underline-offset-4 decoration-primary" href="#">P-10045</a>
+</td>
+<td class="p-4 text-white">450</td>
+<td class="p-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary/20 text-primary border border-primary/30">
+                                                    Available
+                                                </span>
+</td>
+<td class="p-4 text-text-muted italic">--</td>
+<td class="p-4 text-text-muted italic">--</td>
+<td class="p-4 text-right">
+<button class="text-text-muted hover:text-white hover:bg-white/10 p-1 rounded-full transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="group hover:bg-surface-dark/80 transition-colors">
+<td class="p-4">
+<a class="text-white font-medium hover:text-primary hover:underline underline-offset-4 decoration-primary" href="#">P-10046</a>
+</td>
+<td class="p-4 text-white">620</td>
+<td class="p-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-500/20 text-red-400 border border-red-500/30">
+                                                    Sold
+                                                </span>
+</td>
+<td class="p-4 text-white">
+<div class="flex items-center gap-2">
+<div class="size-6 rounded-full bg-cover bg-center" data-alt="Avatar of owner Sarah J." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCKuhwf9D8yjbF3w3V-rn-ohPDqdLN3Usx-vgjodAfoDFS-7hWP_FQAGfOENBZRPxyHH-wBJLYMi5haUX1OhUJ_R_8YeMY6MHN19krrJpZj5JszM_zdmFdKF5UxeR8tHlS44IKH1JyYC1sAgyCoeyHSuhcL3So0gDyFPnkG8tt6Qn-uPo07dWd6H_5OH2371BdLv1iKgrJVJCRstTOyNkh6Vj7KEzak6KKZdwMIAhHKEX1mrNN5r1Iz-1am0Zpvit6tbNJIswJCDmCI");'></div>
+                                                    Sarah Jenkins
+                                                </div>
+</td>
+<td class="p-4 text-text-muted italic">--</td>
+<td class="p-4 text-right">
+<button class="text-text-muted hover:text-white hover:bg-white/10 p-1 rounded-full transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="group hover:bg-surface-dark/80 transition-colors">
+<td class="p-4">
+<a class="text-white font-medium hover:text-primary hover:underline underline-offset-4 decoration-primary" href="#">P-10047</a>
+</td>
+<td class="p-4 text-white">505</td>
+<td class="p-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                                                    Reserved
+                                                </span>
+</td>
+<td class="p-4 text-white">
+<div class="flex items-center gap-2">
+<div class="size-6 rounded-full bg-cover bg-center" data-alt="Avatar of owner Michael B." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDlqKVpbSuTFBXO1IhY3Wtw1SBDPkrzNP19-Fzbtqd6WgoL1EL-H1oAZKVTwXPSOw095tO68WHDL9ucLIcWlYqIW6LiPJWbjf88aCEg57J14vC_jzK0LmTqkBX3nYvMKiRfFxJfpOrbVy7lqqSVreutoDecDbzi9exaf4OkGOTmDivF3mU2CUjua8pgqO0aiPwp2X3KaY2Ekqp_NkPmoNmCOnkyLnEzPDvUeZ1R23ak_20TdOJoPD0QtFid-f-iW2yyiVjr8cK8F1MT");'></div>
+                                                    Michael Brown
+                                                </div>
+</td>
+<td class="p-4 text-white">TechCorp Ltd.</td>
+<td class="p-4 text-right">
+<button class="text-text-muted hover:text-white hover:bg-white/10 p-1 rounded-full transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="group hover:bg-surface-dark/80 transition-colors">
+<td class="p-4">
+<a class="text-white font-medium hover:text-primary hover:underline underline-offset-4 decoration-primary" href="#">P-10048</a>
+</td>
+<td class="p-4 text-white">450</td>
+<td class="p-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary/20 text-primary border border-primary/30">
+                                                    Available
+                                                </span>
+</td>
+<td class="p-4 text-text-muted italic">--</td>
+<td class="p-4 text-text-muted italic">--</td>
+<td class="p-4 text-right">
+<button class="text-text-muted hover:text-white hover:bg-white/10 p-1 rounded-full transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="group hover:bg-surface-dark/80 transition-colors">
+<td class="p-4">
+<a class="text-white font-medium hover:text-primary hover:underline underline-offset-4 decoration-primary" href="#">P-10049</a>
+</td>
+<td class="p-4 text-white">890</td>
+<td class="p-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-500/20 text-blue-400 border border-blue-500/30">
+                                                    Leased
+                                                </span>
+</td>
+<td class="p-4 text-white">Global Estate Holdings</td>
+<td class="p-4 text-white">
+<div class="flex items-center gap-2">
+<div class="size-6 rounded-full bg-cover bg-center" data-alt="Avatar of tenant Lisa W." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAbbQacS2tszT2tZbHIaf3dJGCIzkTF1tlXvPdpbngYaanQx8_zCN8G4oivUj2VYyAatxI5PtH7ZPyX0IYsxAIf9oN6cQH6T35UUwcZYAryZC7WRg1xHr8seuUr5pWyI8ML6gwuqULWJzjLKQUZeEnAouMNj10iwHUYDMGKJeB4H7WtwKTlqJt92_nJBO5or9w_J6GCYvPRsEuy6-V56IgSVpZHG4DbcxhsWyP4yxTXS6hQNgNw1IQD3ZnQzO4MoXZ7_oRV2ZqSsmp1");'></div>
+                                                    Lisa Wang
+                                                </div>
+</td>
+<td class="p-4 text-right">
+<button class="text-text-muted hover:text-white hover:bg-white/10 p-1 rounded-full transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="border-t border-border-green px-4 py-3 flex items-center justify-between bg-surface-dark">
+<div class="flex items-center gap-3">
+<p class="text-text-muted text-sm font-medium">Rows per page:</p>
+<div class="relative">
+<select class="appearance-none bg-[#122118] border border-border-green text-white text-sm rounded-lg pl-3 pr-8 py-1 focus:outline-none focus:border-primary cursor-pointer">
+<option>10</option>
+<option>25</option>
+<option>50</option>
+</select>
+<span class="material-symbols-outlined absolute right-1 top-1/2 -translate-y-1/2 text-text-muted text-lg pointer-events-none">arrow_drop_down</span>
+</div>
+<p class="text-text-muted text-sm font-medium ml-2">1-10 of 45</p>
+</div>
+<div class="flex items-center gap-2">
+<button class="flex items-center justify-center size-8 rounded-lg border border-border-green text-text-muted hover:bg-border-green hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors" disabled="">
+<span class="material-symbols-outlined text-lg">chevron_left</span>
+</button>
+<div class="flex items-center gap-1">
+<button class="size-8 flex items-center justify-center rounded-lg bg-primary text-[#122118] font-bold text-sm">1</button>
+<button class="size-8 flex items-center justify-center rounded-lg hover:bg-border-green text-text-muted hover:text-white text-sm transition-colors">2</button>
+<button class="size-8 flex items-center justify-center rounded-lg hover:bg-border-green text-text-muted hover:text-white text-sm transition-colors">3</button>
+<span class="text-text-muted text-sm px-1">...</span>
+<button class="size-8 flex items-center justify-center rounded-lg hover:bg-border-green text-text-muted hover:text-white text-sm transition-colors">5</button>
+</div>
+<button class="flex items-center justify-center size-8 rounded-lg border border-border-green text-text-muted hover:bg-border-green hover:text-white transition-colors">
+<span class="material-symbols-outlined text-lg">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body></html>

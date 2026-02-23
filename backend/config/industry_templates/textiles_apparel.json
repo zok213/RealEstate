@@ -1,0 +1,77 @@
+{
+  "name": "Textiles & Apparel",
+  "description": "Garment manufacturing and textile production facilities",
+  "typical_lot_size_m2": {
+    "min": 3000,
+    "max": 8000,
+    "preferred": 5000
+  },
+  "frontage_requirements": {
+    "min_m": 50,
+    "preferred_m": 70
+  },
+  "road_specifications": {
+    "row_m": 20,
+    "pavement_width_m": 16,
+    "heavy_duty": false,
+    "design_load_tons": 15
+  },
+  "utilities": {
+    "power": {
+      "demand_mva_per_rai": 5,
+      "three_phase": true,
+      "backup_required": false,
+      "sewing_machines_high_density": true
+    },
+    "water": {
+      "demand_cmd_per_rai": 3500,
+      "industrial_grade": true,
+      "dyeing_operations": true
+    },
+    "wastewater": {
+      "generation_cmd_per_rai": 3000,
+      "pretreatment_required": true,
+      "pollutants": ["dyes", "chemicals", "textile_fibers"],
+      "color_removal_required": true
+    }
+  },
+  "special_requirements": {
+    "high_worker_density": true,
+    "natural_lighting_preferred": true,
+    "ventilation_critical": true,
+    "fabric_storage_area": true,
+    "loading_docks": true,
+    "quality_control_area": true
+  },
+  "building_specs": {
+    "typical_coverage_pct": 65,
+    "height_m": 8,
+    "column_spacing_m": 8,
+    "natural_light": "preferred",
+    "climate_control": "basic",
+    "fire_sprinkler_system": "required"
+  },
+  "worker_facilities": {
+    "changing_rooms": true,
+    "shower_facilities": true,
+    "canteen_required": true,
+    "workers_per_ha": 300,
+    "worker_dormitories_nearby": "recommended",
+    "prayer_room": true,
+    "medical_clinic": true
+  },
+  "compliance": {
+    "environmental_impact_assessment": "required",
+    "wastewater_treatment_mandatory": true,
+    "fire_safety_class": "medium",
+    "buffer_from_residential_m": 200,
+    "social_compliance_audit": "required",
+    "labor_standards": "ILO_compliant"
+  },
+  "social_responsibility": {
+    "fair_labor_practices": true,
+    "safe_working_conditions": true,
+    "emergency_exits_per_100_workers": 3,
+    "first_aid_stations": true
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "name": "Automotive Supplier",
+  "description": "Large automotive manufacturing and assembly facilities",
+  "typical_lot_size_m2": {
+    "min": 5000,
+    "max": 10000,
+    "preferred": 7500
+  },
+  "frontage_requirements": {
+    "min_m": 150,
+    "preferred_m": 200
+  },
+  "road_specifications": {
+    "row_m": 30,
+    "pavement_width_m": 24,
+    "heavy_duty": true,
+    "design_load_tons": 40
+  },
+  "utilities": {
+    "power": {
+      "demand_mva_per_rai": 10,
+      "three_phase": true,
+      "backup_required": true
+    },
+    "water": {
+      "demand_cmd_per_rai": 3000,
+      "industrial_grade": true
+    },
+    "wastewater": {
+      "generation_cmd_per_rai": 2000,
+      "pretreatment_required": true,
+      "pollutants": ["heavy_metals", "oils", "solvents"]
+    }
+  },
+  "special_requirements": {
+    "loading_docks": true,
+    "truck_turning_radius_m": 25,
+    "forklift_access": true,
+    "container_storage_area": true,
+    "hazmat_storage": true
+  },
+  "building_specs": {
+    "typical_coverage_pct": 60,
+    "height_m": 12,
+    "crane_capable": true,
+    "climate_control": true
+  },
+  "compliance": {
+    "environmental_impact_assessment": "required",
+    "fire_safety_class": "high",
+    "buffer_from_residential_m": 500
+  }
+}

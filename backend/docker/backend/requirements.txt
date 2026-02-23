@@ -1,0 +1,15 @@
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+pydantic==1.10.13
+numpy==1.26.2
+shapely==2.0.2
+matplotlib==3.8.2
+ortools==9.12.4544
+deap==1.4.1
+python-multipart==0.0.6
+ezdxf==1.1.3
+scipy==1.11.4
+networkx==3.2.1
+scikit-learn==1.3.2
+python-dotenv==1.0.0
+gunicorn==21.2.0

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Estate Detail - Overview</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="/static/css/main.css" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="/static/js/api.js"></script>
+<script src="/static/js/utils.js"></script>
+<script src="/static/js/estate-nav.js"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#36e27b",
+                        "background-light": "#f6f8f7",
+                        "background-dark": "#122118",
+                        "surface-dark": "#1a2c24",
+                        "surface-dark-lighter": "#23392f",
+                    },
+                    fontFamily: {
+                        "display": ["Spline Sans", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white antialiased min-h-screen flex flex-col">
+<!-- Top Navigation -->
+<div class="w-full border-b border-[#254632] bg-[#122118]">
+<div class="px-6 md:px-10 py-3 flex items-center justify-between">
+<div class="flex items-center gap-4 text-white">
+<div class="size-8 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-3xl">polyline</span>
+</div>
+<h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em]">DXF Parser</h2>
+</div>
+<div class="flex flex-1 justify-end gap-8 items-center">
+<div class="hidden md:flex items-center gap-9">
+<a class="text-white hover:text-primary transition-colors text-sm font-medium leading-normal" href="/">Dashboard</a>
+<a class="text-primary text-sm font-medium leading-normal" href="/">Estates</a>
+<a class="text-white hover:text-primary transition-colors text-sm font-medium leading-normal" href="/upload">Upload</a>
+</div>
+<button class="flex items-center justify-center overflow-hidden rounded-full h-10 w-10 bg-[#23392f] hover:bg-[#254632] text-white transition-colors">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Main Content -->
+<div class="flex-1 flex justify-center py-6 md:py-10 px-4 md:px-10">
+<div class="w-full max-w-[1200px] flex flex-col gap-6">
+<!-- Breadcrumbs -->
+<div class="flex items-center gap-2 text-sm">
+                <a class="text-[#95c6a9] hover:text-white flex items-center gap-1" href="/">
+<span class="material-symbols-outlined text-[18px]">arrow_back</span>
+                    Back
+                </a>
+<span class="text-[#557c66]">/</span>
+<a class="text-[#95c6a9] hover:text-white" href="/">Estates</a>
+<span class="text-[#557c66]">/</span>
+<span id="breadcrumb-name" class="text-white font-medium">Loading...</span>
+</div>
+<!-- Page Header with Actions -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-2">
+<div class="flex flex-col gap-2">
+<h1 id="estate-title" class="text-white text-3xl md:text-4xl font-bold tracking-tight">Loading...</h1>
+<div class="flex items-center gap-3 text-[#95c6a9]">
+<span id="estate-location-display" class="flex items-center gap-1 text-sm"><span class="material-symbols-outlined text-[16px]">pin_drop</span> Loading...</span>
+<span class="w-1 h-1 rounded-full bg-[#557c66]"></span>
+<span id="estate-id-display" class="text-sm">ID: Loading...</span>
+</div>
+</div>
+<div class="flex flex-wrap items-center gap-3">
+<button class="h-10 px-5 rounded-full bg-[#23392f] hover:bg-[#2c463a] text-white text-sm font-bold flex items-center gap-2 transition-colors">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+                        Edit
+                    </button>
+<button class="h-10 px-5 rounded-full bg-[#23392f] hover:bg-[#2c463a] text-white text-sm font-bold flex items-center gap-2 transition-colors">
+<span class="material-symbols-outlined text-[20px]">download</span>
+                        Export
+                    </button>
+<button class="h-10 w-10 rounded-full bg-[#23392f] hover:bg-[#2c463a] text-white flex items-center justify-center transition-colors" title="Refresh">
+<span class="material-symbols-outlined text-[20px]">refresh</span>
+</button>
+</div>
+</div>
+<!-- Tabs -->
+<div class="border-b border-[#254632] flex gap-8 overflow-x-auto no-scrollbar">
+<button class="relative pb-3 text-primary font-bold text-sm md:text-base whitespace-nowrap">
+                    Overview
+                    <span class="absolute bottom-0 left-0 w-full h-[2px] bg-primary rounded-t-full"></span>
+</button>
+<button onclick="EstateNav.navigateToTab('map')" class="relative pb-3 text-[#95c6a9] hover:text-white font-medium text-sm md:text-base whitespace-nowrap transition-colors cursor-pointer">
+                    Map View
+                </button>
+<button onclick="EstateNav.navigateToTab('plots')" class="relative pb-3 text-[#95c6a9] hover:text-white font-medium text-sm md:text-base whitespace-nowrap transition-colors cursor-pointer">
+                    Plots List
+                </button>
+<button class="relative pb-3 text-[#95c6a9] hover:text-white font-medium text-sm md:text-base whitespace-nowrap transition-colors cursor-pointer">
+                    Utilities
+                </button>
+<button class="relative pb-3 text-[#95c6a9] hover:text-white font-medium text-sm md:text-base whitespace-nowrap transition-colors cursor-pointer">
+                    Reports
+                </button>
+</div>
+<!-- Tab Content -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-2">
+<!-- Left Column: Estate Info -->
+<div class="lg:col-span-5 flex flex-col gap-6">
+<!-- Main Info Card -->
+<div class="bg-surface-dark rounded-[2rem] p-6 md:p-8 flex flex-col gap-6 h-full border border-[#254632]">
+<div class="flex items-center justify-between">
+<h3 class="text-xl font-bold text-white">Estate Information</h3>
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#1b3a29] border border-[#254632] text-primary text-xs font-bold uppercase tracking-wider">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                                Active
+                            </span>
+</div>
+<div class="flex flex-col gap-5 mt-2">
+<div class="grid grid-cols-[100px_1fr] items-baseline gap-4">
+<span class="text-[#95c6a9] text-sm">Name</span>
+<span class="text-white font-medium">KCN Tiên Sơn</span>
+</div>
+<div class="h-[1px] bg-[#23392f] w-full"></div>
+<div class="grid grid-cols-[100px_1fr] items-baseline gap-4">
+<span class="text-[#95c6a9] text-sm">Location</span>
+<span class="text-white font-medium">Hoàn Sơn, Tiên Du</span>
+</div>
+<div class="h-[1px] bg-[#23392f] w-full"></div>
+<div class="grid grid-cols-[100px_1fr] items-baseline gap-4">
+<span class="text-[#95c6a9] text-sm">Province</span>
+<span class="text-white font-medium">Bắc Ninh</span>
+</div>
+<div class="h-[1px] bg-[#23392f] w-full"></div>
+<div class="grid grid-cols-[100px_1fr] items-baseline gap-4">
+<span class="text-[#95c6a9] text-sm">Country</span>
+<span class="text-white font-medium">Vietnam</span>
+</div>
+<div class="h-[1px] bg-[#23392f] w-full"></div>
+<div class="grid grid-cols-[100px_1fr] items-baseline gap-4">
+<span class="text-[#95c6a9] text-sm">Created</span>
+<span class="text-white font-medium">Oct 24, 2023</span>
+</div>
+</div>
+<div class="mt-auto pt-6 flex gap-3">
+<button class="flex-1 h-10 rounded-full border border-[#36e27b] text-[#36e27b] hover:bg-[#36e27b] hover:text-[#122118] text-sm font-bold transition-all">
+                                Edit Details
+                            </button>
+<button class="flex-1 h-10 rounded-full border border-[#254632] text-[#95c6a9] hover:border-[#95c6a9] hover:text-white text-sm font-bold transition-all">
+                                Archive
+                            </button>
+</div>
+</div>
+<!-- Mini Map Preview (Optional visual context) -->
+<div onclick="EstateNav.navigateToTab('fullscreen')" class="bg-surface-dark rounded-[2rem] h-48 overflow-hidden relative group cursor-pointer border border-[#254632] hover:border-primary transition-colors">
+<img class="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity grayscale contrast-125" data-alt="Dark stylized map overview of an industrial zone with green highlights" data-location="Bac Ninh, Vietnam" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAjQ9K5I4aX3xHb8Ma7R1znlhRhPxJpa3Ven3XbDxAY6LU_S1Tv9gAEjzViobmg-HqNvf3WlHf98uRvP0ifqZLgbeh2csL3pk90scFS5qzWklY9V8aAOvFoV-LJtgppP8Lj5bHBbmotULOtn7c_NuqK9-WvhOwN0CUskVyEkfM03SUoHiKSNmSeA4l6N6EPc7oaEXHb6hhS6RSjwgTsRpx3LeExybrN3QixKy36fqI6A_WnWgjvH15UB5qkmP_5IGZ1IVH7G5cWwsh0"/>
+<div class="absolute inset-0 bg-gradient-to-t from-[#122118] to-transparent pointer-events-none"></div>
+<div class="absolute bottom-4 left-6 flex items-center gap-2 pointer-events-none">
+<span class="material-symbols-outlined text-primary">map</span>
+<span class="text-white font-bold text-sm">View Full Map</span>
+</div>
+</div>
+</div>
+<!-- Right Column: Quick Stats -->
+<div class="lg:col-span-7 flex flex-col gap-6">
+<div class="bg-surface-dark rounded-[2rem] p-6 md:p-8 flex flex-col gap-8 border border-[#254632]">
+<div class="flex items-center justify-between">
+<h3 class="text-xl font-bold text-white">Quick Stats</h3>
+<button class="text-[#95c6a9] hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_horiz</span>
+</button>
+</div>
+<!-- Hero Stat -->
+<div class="flex flex-col md:flex-row gap-6 items-start md:items-center">
+<div class="flex-1 p-6 rounded-3xl bg-[#1b3a29] border border-[#254632] w-full">
+<div class="flex items-center gap-3 mb-2">
+<span class="material-symbols-outlined text-[#95c6a9]">square_foot</span>
+<span class="text-[#95c6a9] text-sm font-medium uppercase tracking-wider">Total Area</span>
+</div>
+<p class="text-5xl font-bold text-white tracking-tight">16.2 <span class="text-2xl text-primary font-medium">ha</span></p>
+</div>
+<div class="flex-1 w-full p-6 rounded-3xl bg-surface-dark-lighter border border-[#254632] flex flex-col justify-center">
+<div class="flex items-center justify-between mb-4">
+<span class="text-[#95c6a9] text-sm font-medium uppercase tracking-wider">Plot Utilization</span>
+<span class="text-white font-bold">60%</span>
+</div>
+<div class="w-full h-3 bg-[#122118] rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[60%]"></div>
+</div>
+<div class="flex justify-between mt-3 text-xs">
+<span class="text-white">Sold: 8</span>
+<span class="text-[#95c6a9]">Available: 12</span>
+</div>
+</div>
+</div>
+<!-- Grid Stats -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<!-- Stat Item -->
+<div class="p-5 rounded-2xl bg-surface-dark-lighter hover:bg-[#2c463a] transition-colors border border-[#254632] flex flex-col gap-3">
+<div class="w-10 h-10 rounded-full bg-[#1b3a29] flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">grid_view</span>
+</div>
+<div>
+<p class="text-2xl font-bold text-white">20</p>
+<p class="text-xs text-[#95c6a9] font-medium uppercase mt-1">Plots</p>
+</div>
+</div>
+<!-- Stat Item -->
+<div class="p-5 rounded-2xl bg-surface-dark-lighter hover:bg-[#2c463a] transition-colors border border-[#254632] flex flex-col gap-3">
+<div class="w-10 h-10 rounded-full bg-[#1b3a29] flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">add_road</span>
+</div>
+<div>
+<p class="text-2xl font-bold text-white">5</p>
+<p class="text-xs text-[#95c6a9] font-medium uppercase mt-1">Roads</p>
+</div>
+</div>
+<!-- Stat Item -->
+<div class="p-5 rounded-2xl bg-surface-dark-lighter hover:bg-[#2c463a] transition-colors border border-[#254632] flex flex-col gap-3">
+<div class="w-10 h-10 rounded-full bg-[#1b3a29] flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">bolt</span>
+</div>
+<div>
+<p class="text-2xl font-bold text-white">3</p>
+<p class="text-xs text-[#95c6a9] font-medium uppercase mt-1">Utilities</p>
+</div>
+</div>
+<!-- Stat Item -->
+<div class="p-5 rounded-2xl bg-surface-dark-lighter hover:bg-[#2c463a] transition-colors border border-[#254632] flex flex-col gap-3">
+<div class="w-10 h-10 rounded-full bg-[#1b3a29] flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">warehouse</span>
+</div>
+<div>
+<p class="text-2xl font-bold text-white">4</p>
+<p class="text-xs text-[#95c6a9] font-medium uppercase mt-1">Facilities</p>
+</div>
+</div>
+</div>
+<!-- Recent Activity / Parsing Status -->
+<div class="mt-2">
+<h4 class="text-sm font-bold text-[#95c6a9] uppercase tracking-wider mb-4">Parsing Status</h4>
+<div class="bg-surface-dark-lighter rounded-xl p-4 border border-[#254632] flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-[#1b3a29] flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary text-xl">check_circle</span>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-white font-medium truncate">DXF File Parsed Successfully</p>
+<p class="text-[#95c6a9] text-xs">Processed 145 layers, 2038 entities.</p>
+</div>
+<span class="text-[#557c66] text-xs font-mono whitespace-nowrap">2h ago</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+// Load estate data dynamically from session
+async function loadEstateData() {
+    const estateId = EstateNav.getCurrentEstateId();
+    if (!estateId) {
+        console.error('No estate ID found');
+        return;
+    }
+    
+    try {
+        const response = await fetch(`/api/session/${estateId}`);
+        if (!response.ok) {
+            throw new Error('Failed to load session data');
+        }
+        
+        const session = await response.json();
+        const metadata = session.metadata || {};
+        
+        // Update page title and breadcrumb
+        const estateName = metadata.estate_name || 'Unnamed Estate';
+        const location = metadata.location || '';
+        const province = metadata.province || '';
+        const country = metadata.country || 'Vietnam';
+        
+        // Format full display name
+        const fullName = location ? `${estateName}, ${location}` : estateName;
+        const fullLocation = province ? `${province}, ${country}` : country;
+        
+        // Update DOM elements
+        document.getElementById('breadcrumb-name').textContent = estateName;
+        document.getElementById('estate-title').textContent = fullName;
+        document.getElementById('estate-location-display').innerHTML = 
+            `<span class="material-symbols-outlined text-[16px]">pin_drop</span> ${fullLocation}`;
+        document.getElementById('estate-id-display').textContent = `ID: #${estateId.substring(0, 8)}`;
+        
+        // Update document title
+        document.title = `${estateName} - Overview`;
+        
+    } catch (error) {
+        console.error('Error loading estate data:', error);
+        document.getElementById('breadcrumb-name').textContent = 'Error Loading';
+        document.getElementById('estate-title').textContent = 'Failed to Load Estate Data';
+        document.getElementById('estate-location-display').innerHTML = 
+            '<span class="material-symbols-outlined text-[16px]">error</span> Error';
+    }
+}
+
+// Load data when page loads
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadEstateData);
+} else {
+    loadEstateData();
+}
+</script>
+</body></html>

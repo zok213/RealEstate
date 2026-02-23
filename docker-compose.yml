@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  # Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: industrial-park-backend
+    ports:
+      - "8001:8001"
+    environment:
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY:-AIzaSyAIbeJTLQcqt-MX_QFMDvGTMTuz8AFh_do}
+      - MEGALLM_API_KEY=${MEGALLM_API_KEY:-sk-mega-3290d012aeebdb8ae4857f31ecb44d1f23745ea713a34090cc3d1803ed0444af}
+      - CORS_ORIGINS=http://localhost:3000,http://localhost:3001
+    volumes:
+      - ./backend/examples:/app/examples:ro
+      - ./backend/sample-data:/app/sample-data:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8001/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # Frontend (Next.js)
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: industrial-park-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_BACKEND_URL=http://backend:8001
+    depends_on:
+      - backend
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+networks:
+  default:
+    name: industrial-park-network

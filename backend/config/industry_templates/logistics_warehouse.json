@@ -1,0 +1,77 @@
+{
+  "name": "Logistics & Warehouse",
+  "description": "Large-scale warehousing and distribution centers",
+  "typical_lot_size_m2": {
+    "min": 10000,
+    "max": 20000,
+    "preferred": 15000
+  },
+  "frontage_requirements": {
+    "min_m": 50,
+    "preferred_m": 80,
+    "note": "Frontage less critical than access and turning radius"
+  },
+  "road_specifications": {
+    "row_m": 30,
+    "pavement_width_m": 24,
+    "heavy_duty": true,
+    "design_load_tons": 40,
+    "truck_turning_radius_m": 25,
+    "multiple_access_points": true
+  },
+  "utilities": {
+    "power": {
+      "demand_mva_per_rai": 3,
+      "three_phase": true,
+      "backup_required": false,
+      "lighting_dominant": true
+    },
+    "water": {
+      "demand_cmd_per_rai": 500,
+      "industrial_grade": true,
+      "minimal_usage": true
+    },
+    "wastewater": {
+      "generation_cmd_per_rai": 300,
+      "pretreatment_required": false,
+      "domestic_only": true
+    }
+  },
+  "special_requirements": {
+    "loading_docks": true,
+    "dock_doors_count": "20+",
+    "truck_parking_bays": "50+",
+    "container_storage_area": true,
+    "truck_scales": true,
+    "24_7_operation": true,
+    "wide_column_spacing": true,
+    "high_ceiling_clearance_m": 12
+  },
+  "building_specs": {
+    "typical_coverage_pct": 75,
+    "height_m": 14,
+    "column_grid_m": 12,
+    "floor_loading_capacity_kn_m2": 50,
+    "racking_capacity": "high_bay",
+    "climate_control": false,
+    "fire_sprinkler_system": "required"
+  },
+  "yard_requirements": {
+    "paved_yard_area_pct": 80,
+    "truck_maneuvering_space": true,
+    "trailer_parking": true,
+    "container_stacking_area": true
+  },
+  "compliance": {
+    "environmental_impact_assessment": "standard",
+    "fire_safety_class": "medium",
+    "buffer_from_residential_m": 100,
+    "24_hour_operation_permit": true
+  },
+  "worker_facilities": {
+    "changing_rooms": true,
+    "canteen_required": true,
+    "workers_per_ha": 50,
+    "security_gate_house": true
+  }
+}

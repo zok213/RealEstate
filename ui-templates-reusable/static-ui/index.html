@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DXF Land Parser Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="/static/css/main.css" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="/static/js/api.js"></script>
+<script src="/static/js/utils.js"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#36e27b",
+                        "background-light": "#f6f8f7",
+                        "background-dark": "#112117",
+                        "surface-dark": "#1b3224",
+                        "surface-light": "#ffffff",
+                    },
+                    fontFamily: {
+                        "display": ["Spline Sans", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: "Spline Sans", sans-serif;
+        }
+        /* Custom scrollbar for better look in dark mode */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #112117; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #254632; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #36e27b; 
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-gray-900 dark:text-white flex flex-col h-screen overflow-hidden">
+<script>
+    // Configuration
+    const API_BASE_URL = window.location.origin;
+    
+    // Navigation helpers
+    function navigateToUpload() {
+        window.location.href = '/upload';
+    }
+    
+    function navigateToEstate(estateId) {
+        window.location.href = `/estate/${estateId}`;
+    }
+    
+    // Fetch estates from API
+    async function loadEstates() {
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/health`);
+            const data = await response.json();
+            console.log('API health:', data);
+        } catch (error) {
+            console.error('Error loading estates:', error);
+        }
+    }
+    
+    // Load on page ready
+    document.addEventListener('DOMContentLoaded', loadEstates);
+</script>
+<!-- Top Navigation Bar -->
+<header class="flex-none flex items-center justify-between border-b border-gray-200 dark:border-[#254632] px-6 py-4 bg-white dark:bg-[#122118]">
+<div class="flex items-center gap-3">
+<div class="flex items-center justify-center size-8 rounded-full bg-primary/20 text-primary">
+<span class="material-symbols-outlined text-2xl">public</span>
+</div>
+<h1 class="text-xl font-bold tracking-tight text-gray-900 dark:text-white">DXF Land Parser</h1>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-primary font-bold text-sm border-b-2 border-primary pb-0.5" href="/">Dashboard</a>
+<a class="text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary font-medium text-sm transition-colors" href="/upload">Upload</a>
+<a class="text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary font-medium text-sm transition-colors" href="/">Reports</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="relative p-2 text-gray-500 dark:text-gray-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-red-500 rounded-full"></span>
+</button>
+<button class="flex items-center gap-2 pl-2 pr-1 py-1 rounded-full bg-gray-100 dark:bg-[#254632] hover:bg-gray-200 dark:hover:bg-[#2f553d] transition-colors group">
+<div class="size-8 rounded-full bg-primary text-[#122118] flex items-center justify-center font-bold text-sm">
+                    JD
+                </div>
+<span class="material-symbols-outlined text-gray-500 dark:text-gray-300 group-hover:text-primary">expand_more</span>
+</button>
+</div>
+</header>
+<!-- Main Layout Container -->
+<div class="flex flex-1 overflow-hidden">
+<!-- Left Sidebar (Fixed 300px) -->
+<aside class="w-[300px] flex-none flex flex-col gap-8 bg-white dark:bg-[#122118] border-r border-gray-200 dark:border-[#254632] p-6 overflow-y-auto">
+<!-- Quick Actions -->
+<div class="flex flex-col gap-4">
+<h2 class="text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500">Quick Actions</h2>
+<div class="flex flex-col gap-3">
+<button onclick="navigateToUpload()" class="flex items-center gap-3 px-4 py-3 rounded-full bg-primary text-[#122118] shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:scale-[1.02] transition-all">
+<span class="material-symbols-outlined">add_circle</span>
+<span class="font-bold text-sm">Upload DXF</span>
+</button>
+<button onclick="navigateToUpload()" class="flex items-center gap-3 px-4 py-3 rounded-full bg-gray-50 dark:bg-[#1b3224] text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-[#254632] transition-colors border border-transparent hover:border-gray-200 dark:hover:border-[#366348]">
+<span class="material-symbols-outlined">add</span>
+<span class="font-medium text-sm">New Estate</span>
+</button>
+<button class="flex items-center gap-3 px-4 py-3 rounded-full bg-gray-50 dark:bg-[#1b3224] text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-[#254632] transition-colors border border-transparent hover:border-gray-200 dark:hover:border-[#366348]">
+<span class="material-symbols-outlined">bar_chart</span>
+<span class="font-medium text-sm">Reports</span>
+</button>
+<button class="flex items-center gap-3 px-4 py-3 rounded-full bg-gray-50 dark:bg-[#1b3224] text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-[#254632] transition-colors border border-transparent hover:border-gray-200 dark:hover:border-[#366348]">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-medium text-sm">Settings</span>
+</button>
+</div>
+</div>
+<!-- Divider -->
+<div class="h-px bg-gray-200 dark:bg-[#254632] w-full"></div>
+<!-- Filters -->
+<div class="flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<h2 class="text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500">Filters</h2>
+<button class="text-xs text-primary font-medium hover:underline">Reset</button>
+</div>
+<div class="flex flex-col gap-4">
+<label class="flex flex-col gap-2">
+<span class="text-sm font-medium text-gray-600 dark:text-gray-300">Province</span>
+<div class="relative">
+<select class="w-full appearance-none bg-gray-50 dark:bg-[#1b3224] border border-gray-200 dark:border-[#366348] text-gray-900 dark:text-white text-sm rounded-xl px-4 py-3 pr-10 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+<option>All Provinces</option>
+<option>Dong Nai</option>
+<option>Binh Duong</option>
+<option>Long An</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none text-[20px]">expand_more</span>
+</div>
+</label>
+<label class="flex flex-col gap-2">
+<span class="text-sm font-medium text-gray-600 dark:text-gray-300">Status</span>
+<div class="relative">
+<select class="w-full appearance-none bg-gray-50 dark:bg-[#1b3224] border border-gray-200 dark:border-[#366348] text-gray-900 dark:text-white text-sm rounded-xl px-4 py-3 pr-10 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
+<option>Active</option>
+<option>Pending</option>
+<option>Archived</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none text-[20px]">expand_more</span>
+</div>
+</label>
+<button class="w-full mt-2 py-3 bg-primary text-[#122118] font-bold text-sm rounded-full hover:bg-opacity-90 transition-opacity">
+                        Apply Filters
+                    </button>
+</div>
+</div>
+</aside>
+<!-- Right Content Area (Flexible) -->
+<main class="flex-1 overflow-y-auto p-6 lg:p-10 bg-background-light dark:bg-background-dark">
+<div class="max-w-7xl mx-auto flex flex-col gap-10">
+<!-- Welcome Section (Optional, nice touch) -->
+<div class="flex flex-col gap-1">
+<h2 class="text-3xl font-bold text-gray-900 dark:text-white">Dashboard Overview</h2>
+<p class="text-gray-500 dark:text-gray-400">Welcome back, here's what's happening with your land portfolio.</p>
+</div>
+<!-- Stats Cards -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Stat Card 1 -->
+<div class="bg-white dark:bg-[#1b3224] p-6 rounded-[2rem] border border-gray-100 dark:border-[#254632] shadow-sm flex flex-col gap-4 relative overflow-hidden group">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-primary/10 rounded-full group-hover:scale-110 transition-transform duration-500"></div>
+<div class="flex items-center gap-3 z-10">
+<div class="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg text-blue-600 dark:text-blue-400">
+<span class="material-symbols-outlined">factory</span>
+</div>
+<span class="text-sm font-medium text-gray-500 dark:text-gray-400">Industrial Zones</span>
+</div>
+<div class="flex items-end gap-2 z-10">
+<span class="text-4xl font-bold text-gray-900 dark:text-white">3</span>
+<span class="text-sm text-green-500 font-medium mb-1 flex items-center">
+<span class="material-symbols-outlined text-sm">trending_up</span> +12%
+                            </span>
+</div>
+<p class="text-sm text-gray-400 dark:text-gray-500">Khu Công Nghiệp active this month</p>
+</div>
+<!-- Stat Card 2 -->
+<div class="bg-white dark:bg-[#1b3224] p-6 rounded-[2rem] border border-gray-100 dark:border-[#254632] shadow-sm flex flex-col gap-4 relative overflow-hidden group">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-primary/10 rounded-full group-hover:scale-110 transition-transform duration-500"></div>
+<div class="flex items-center gap-3 z-10">
+<div class="p-2 bg-amber-100 dark:bg-amber-900/30 rounded-lg text-amber-600 dark:text-amber-400">
+<span class="material-symbols-outlined">grid_view</span>
+</div>
+<span class="text-sm font-medium text-gray-500 dark:text-gray-400">Land Plots</span>
+</div>
+<div class="flex items-end gap-2 z-10">
+<span class="text-4xl font-bold text-gray-900 dark:text-white">42</span>
+<span class="text-sm text-gray-400 font-medium mb-1">Total Lô Đất</span>
+</div>
+<p class="text-sm text-gray-400 dark:text-gray-500">Across 3 active provinces</p>
+</div>
+<!-- Stat Card 3 -->
+<div class="bg-white dark:bg-[#1b3224] p-6 rounded-[2rem] border border-gray-100 dark:border-[#254632] shadow-sm flex flex-col gap-4 relative overflow-hidden group">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-primary/10 rounded-full group-hover:scale-110 transition-transform duration-500"></div>
+<div class="flex items-center gap-3 z-10">
+<div class="p-2 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg text-emerald-600 dark:text-emerald-400">
+<span class="material-symbols-outlined">park</span>
+</div>
+<span class="text-sm font-medium text-gray-500 dark:text-gray-400">Green Zones</span>
+</div>
+<div class="flex items-end gap-2 z-10">
+<span class="text-4xl font-bold text-gray-900 dark:text-white">28</span>
+<span class="text-sm text-green-500 font-medium mb-1 flex items-center">
+<span class="material-symbols-outlined text-sm">trending_up</span> +5%
+                            </span>
+</div>
+<p class="text-sm text-gray-400 dark:text-gray-500">Khu Xanh designated areas</p>
+</div>
+</section>
+<!-- Recent Estates Section -->
+<section class="flex flex-col gap-6">
+<div class="flex items-center justify-between">
+<h3 class="text-xl font-bold text-gray-900 dark:text-white">Recent Estates</h3>
+<a class="text-sm font-medium text-primary hover:underline flex items-center gap-1" href="#">
+                            View All <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+<!-- Estate Card 1 -->
+<div class="bg-white dark:bg-[#1b3224] rounded-[2rem] border border-gray-100 dark:border-[#254632] p-5 shadow-sm hover:shadow-md transition-shadow group flex flex-col gap-4">
+<!-- Card Header with Map Preview -->
+<div class="h-32 w-full rounded-xl bg-gray-200 dark:bg-[#254632] relative overflow-hidden">
+<img class="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-500" data-alt="Satellite map view of Sunnyvale Estate" data-location="Dong Nai" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDki23a7BHHtJrjiRqkjuE5g89QdHv0sBgZndv59IwOiu4YsqXNiTSAwdmUG0ngDBOlyI_bKaSldFJ7PZiVhLKxMG5kAvna2DOdJLFGTQ_BLFjgaM8ZeTHA3fa9FLOlr_wT95NWWoYzJKbm-wERUwlVTj1IDbuDnCDrhpG7FULP5h6V67cvGermISkyL_dr3BKqcD3GdOnjb4zSCfaIQ-tfrWHX89zCr1mJ5O3OD0_vhyKcdKXUY2QaW3FIV1qSI06Z_ybmYA5QUSMM"/>
+<div class="absolute top-3 right-3 bg-green-500/90 text-white text-xs font-bold px-2 py-1 rounded-full backdrop-blur-sm">
+                                    Active
+                                </div>
+</div>
+<!-- Card Content -->
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="text-lg font-bold text-gray-900 dark:text-white leading-tight">Sunnyvale Estate</h4>
+<div class="flex items-center gap-1 text-gray-500 dark:text-gray-400 text-sm mt-1">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+                                            Dong Nai Province
+                                        </div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-3 mt-2">
+<div class="flex items-center gap-2 p-2 bg-gray-50 dark:bg-[#254632]/50 rounded-lg">
+<span class="material-symbols-outlined text-gray-400 text-[20px]">square_foot</span>
+<div class="flex flex-col">
+<span class="text-xs text-gray-500 dark:text-gray-400">Area</span>
+<span class="text-sm font-bold text-gray-900 dark:text-white">450 ha</span>
+</div>
+</div>
+<div class="flex items-center gap-2 p-2 bg-gray-50 dark:bg-[#254632]/50 rounded-lg">
+<span class="material-symbols-outlined text-gray-400 text-[20px]">layers</span>
+<div class="flex flex-col">
+<span class="text-xs text-gray-500 dark:text-gray-400">Plots</span>
+<span class="text-sm font-bold text-gray-900 dark:text-white">12</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Actions -->
+<div class="pt-4 border-t border-gray-100 dark:border-[#254632] flex items-center justify-between gap-2 mt-auto">
+<button class="flex-1 py-2 rounded-full text-xs font-bold bg-gray-100 dark:bg-[#254632] hover:bg-gray-200 dark:hover:bg-[#366348] text-gray-700 dark:text-white transition-colors">
+                                    View Details
+                                </button>
+<div class="flex gap-2">
+<button class="size-8 rounded-full flex items-center justify-center bg-transparent hover:bg-gray-100 dark:hover:bg-[#254632] text-gray-500 dark:text-gray-400 transition-colors" title="Edit">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="size-8 rounded-full flex items-center justify-center bg-transparent hover:bg-gray-100 dark:hover:bg-[#254632] text-gray-500 dark:text-gray-400 transition-colors" title="Export">
+<span class="material-symbols-outlined text-[20px]">download</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Estate Card 2 -->
+<div class="bg-white dark:bg-[#1b3224] rounded-[2rem] border border-gray-100 dark:border-[#254632] p-5 shadow-sm hover:shadow-md transition-shadow group flex flex-col gap-4">
+<!-- Card Header with Map Preview -->
+<div class="h-32 w-full rounded-xl bg-gray-200 dark:bg-[#254632] relative overflow-hidden">
+<img class="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-500" data-alt="Aerial view of Riverside Industrial Park" data-location="Long An" src="https://lh3.googleusercontent.com/aida-public/AB6AXuARHzQP-HrBT29sVlxm6MGnVHStaP5lakwK4Gbu1s1O-6kh5FmdQEKmx-mifQcGkOxFIvvzVjUUdfxxgd6JHtuclnOdesI8vgjfjkRydZ5kwc0-UOYtuhV-iCbPS3TBvQpzSjWn2RgUh9syEv7Ko20LMtPOMY771xgZZXIpYXgTyTQSk5rxBGsLFs2FZuAyfIDWN-jxCfeNd1RUlwoR9nlgoGotqypCfbgjHSbuC77f4eFgIWRst87Qil4Gcy1U9fl5h_DwWtYAOZTI"/>
+<div class="absolute top-3 right-3 bg-yellow-500/90 text-black text-xs font-bold px-2 py-1 rounded-full backdrop-blur-sm">
+                                    Pending
+                                </div>
+</div>
+<!-- Card Content -->
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="text-lg font-bold text-gray-900 dark:text-white leading-tight">Riverside Ind. Park</h4>
+<div class="flex items-center gap-1 text-gray-500 dark:text-gray-400 text-sm mt-1">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+                                            Long An Province
+                                        </div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-3 mt-2">
+<div class="flex items-center gap-2 p-2 bg-gray-50 dark:bg-[#254632]/50 rounded-lg">
+<span class="material-symbols-outlined text-gray-400 text-[20px]">square_foot</span>
+<div class="flex flex-col">
+<span class="text-xs text-gray-500 dark:text-gray-400">Area</span>
+<span class="text-sm font-bold text-gray-900 dark:text-white">1,200 ha</span>
+</div>
+</div>
+<div class="flex items-center gap-2 p-2 bg-gray-50 dark:bg-[#254632]/50 rounded-lg">
+<span class="material-symbols-outlined text-gray-400 text-[20px]">layers</span>
+<div class="flex flex-col">
+<span class="text-xs text-gray-500 dark:text-gray-400">Plots</span>
+<span class="text-sm font-bold text-gray-900 dark:text-white">5</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Actions -->
+<div class="pt-4 border-t border-gray-100 dark:border-[#254632] flex items-center justify-between gap-2 mt-auto">
+<button class="flex-1 py-2 rounded-full text-xs font-bold bg-gray-100 dark:bg-[#254632] hover:bg-gray-200 dark:hover:bg-[#366348] text-gray-700 dark:text-white transition-colors">
+                                    View Details
+                                </button>
+<div class="flex gap-2">
+<button class="size-8 rounded-full flex items-center justify-center bg-transparent hover:bg-gray-100 dark:hover:bg-[#254632] text-gray-500 dark:text-gray-400 transition-colors" title="Edit">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="size-8 rounded-full flex items-center justify-center bg-transparent hover:bg-gray-100 dark:hover:bg-[#254632] text-gray-500 dark:text-gray-400 transition-colors" title="Export">
+<span class="material-symbols-outlined text-[20px]">download</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Estate Card 3 -->
+<div class="bg-white dark:bg-[#1b3224] rounded-[2rem] border border-gray-100 dark:border-[#254632] p-5 shadow-sm hover:shadow-md transition-shadow group flex flex-col gap-4">
+<!-- Card Header with Map Preview -->
+<div class="h-32 w-full rounded-xl bg-gray-200 dark:bg-[#254632] relative overflow-hidden">
+<img class="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-500" data-alt="Urban development plan for Northern Hills Extension" data-location="Binh Duong" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA37V8aHv4CuYfYS57Ey3nSs9MI48JhpDEl2R9I5P-WYg7ZYAmGtaehr5JwzgZcz11NLy4tj_zKZlIUEOV2sV5_AbTsOpGZ1ElHPkWzJhMnFNFYaCHs7Y05yFu4BPTXU0dlqHU2BDWfF0ZMs0QRR6N1sG-MPm67DgCtdFSLgs6Duc1K3dI1KbFa-GllNgOdZ71ZqLBbyBiZeTXREBzOAXAEdXEKl-Gy7lgIdDUWNfP_ZhhI6Z00CSzdQoIxYX53xd44W8jDlPzbcPIK"/>
+<div class="absolute top-3 right-3 bg-gray-500/90 text-white text-xs font-bold px-2 py-1 rounded-full backdrop-blur-sm">
+                                    Draft
+                                </div>
+</div>
+<!-- Card Content -->
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="text-lg font-bold text-gray-900 dark:text-white leading-tight">Northern Hills Ext.</h4>
+<div class="flex items-center gap-1 text-gray-500 dark:text-gray-400 text-sm mt-1">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+                                            Binh Duong Province
+                                        </div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-3 mt-2">
+<div class="flex items-center gap-2 p-2 bg-gray-50 dark:bg-[#254632]/50 rounded-lg">
+<span class="material-symbols-outlined text-gray-400 text-[20px]">square_foot</span>
+<div class="flex flex-col">
+<span class="text-xs text-gray-500 dark:text-gray-400">Area</span>
+<span class="text-sm font-bold text-gray-900 dark:text-white">210 ha</span>
+</div>
+</div>
+<div class="flex items-center gap-2 p-2 bg-gray-50 dark:bg-[#254632]/50 rounded-lg">
+<span class="material-symbols-outlined text-gray-400 text-[20px]">layers</span>
+<div class="flex flex-col">
+<span class="text-xs text-gray-500 dark:text-gray-400">Plots</span>
+<span class="text-sm font-bold text-gray-900 dark:text-white">8</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Actions -->
+<div class="pt-4 border-t border-gray-100 dark:border-[#254632] flex items-center justify-between gap-2 mt-auto">
+<button class="flex-1 py-2 rounded-full text-xs font-bold bg-gray-100 dark:bg-[#254632] hover:bg-gray-200 dark:hover:bg-[#366348] text-gray-700 dark:text-white transition-colors">
+                                    View Details
+                                </button>
+<div class="flex gap-2">
+<button class="size-8 rounded-full flex items-center justify-center bg-transparent hover:bg-gray-100 dark:hover:bg-[#254632] text-gray-500 dark:text-gray-400 transition-colors" title="Edit">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="size-8 rounded-full flex items-center justify-center bg-transparent hover:bg-gray-100 dark:hover:bg-[#254632] text-gray-500 dark:text-gray-400 transition-colors" title="Export">
+<span class="material-symbols-outlined text-[20px]">download</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+</div>
+</body></html>

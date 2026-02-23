@@ -1,0 +1,82 @@
+{
+  "name": "Electronics Manufacturing",
+  "description": "Clean room electronics assembly and semiconductor facilities",
+  "typical_lot_size_m2": {
+    "min": 4000,
+    "max": 8000,
+    "preferred": 6000
+  },
+  "plot_dimensions": {
+    "typical_width_m": 100,
+    "typical_depth_m": 150,
+    "aspect_ratio_max": 1.8
+  },
+  "frontage_requirements": {
+    "min_m": 80,
+    "preferred_m": 100
+  },
+  "road_specifications": {
+    "row_m": 24,
+    "pavement_width_m": 18,
+    "heavy_duty": false,
+    "design_load_tons": 20,
+    "vibration_dampening": true
+  },
+  "utilities": {
+    "power": {
+      "demand_mva_per_rai": 8,
+      "three_phase": true,
+      "backup_required": true,
+      "ups_required": true,
+      "power_quality_critical": true,
+      "voltage_regulation_strict": true
+    },
+    "water": {
+      "demand_cmd_per_rai": 2500,
+      "ultra_pure_water_required": true,
+      "di_water_system": true
+    },
+    "wastewater": {
+      "generation_cmd_per_rai": 1800,
+      "pretreatment_required": true,
+      "pollutants": ["heavy_metals", "acids", "solvents", "photoresists"]
+    },
+    "gas": {
+      "nitrogen_required": true,
+      "clean_dry_air": true,
+      "special_process_gases": true
+    }
+  },
+  "special_requirements": {
+    "clean_room_class": "ISO_7",
+    "vibration_free_zones": true,
+    "esd_protected_areas": true,
+    "humidity_control_strict": true,
+    "temperature_control_strict": true,
+    "particle_filtration": true,
+    "airlocks_required": true
+  },
+  "building_specs": {
+    "typical_coverage_pct": 70,
+    "height_m": 8,
+    "raised_floor": true,
+    "interstitial_space": true,
+    "climate_control": "critical",
+    "humidity_range_pct": [40, 60],
+    "temperature_range_c": [20, 23]
+  },
+  "compliance": {
+    "iso_cleanroom_certified": true,
+    "esd_control_program": true,
+    "environmental_impact_assessment": "required",
+    "hazmat_handling": true,
+    "fire_safety_class": "high",
+    "buffer_from_residential_m": 200
+  },
+  "worker_facilities": {
+    "gowning_rooms": true,
+    "air_showers": true,
+    "canteen_required": true,
+    "workers_per_ha": 300
+  }
+}
