@@ -48,12 +48,6 @@ This system generates optimized industrial park layouts from CAD files (DXF/DWG)
   - Hard/soft constraint priorities
   - JSON import/export
 
-### Compliance
-
-- ✅ **IEAT Thailand Standards**: Green space (15%), setbacks (50m), parking (10%), fire access (30m)
-- ✅ **TCVN 7144 Vietnam Standards**: Lot sizes (500m²), frontage (20m), roads (12m), utilities (3m)
-- 📈 **Real-time Compliance Checking**: Automated validation during design generation
-
 ## 🚀 Quick Start
 
 ### Prerequisites
